@@ -15,7 +15,7 @@ public class Stack {
     public int pop() {
 
         if (isEmpty()){
-            return -1
+            return -1;
         }
         
         int value = top.data;
@@ -24,6 +24,6 @@ public class Stack {
     }
 
     public boolean isEmpty() {
-        return top == nul1;
+        return top == null;
     }
 }
