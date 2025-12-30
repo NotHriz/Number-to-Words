@@ -1,22 +1,29 @@
 public class Stack {
 
-    private int[] data;
-    private int top;
+    private Node top;
 
-    public Stack(int size) {
-        data = new int[size];
-        top = -1;
+    public Stack() {
+        top = null;
     }
 
     public void push(int value) {
-        data[++top] = value;
+        Node newNode = new Node(value);
+        newNode.next = top;
+        top = newNode;
     }
 
     public int pop() {
-        return data[top--];
+
+        if (isEmpty()){
+            return -1
+        }
+        
+        int value = top.data;
+        top = top.next;
+        return value;
     }
 
     public boolean isEmpty() {
-        return top == -1;
+        return top == nul1;
     }
 }
