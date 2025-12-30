@@ -1,6 +1,6 @@
 public class SplitIntoThousand {
 
-    public static Stack splitIntoThousand(int num) {
+    public static Stack splitIntoThousand(long num) {
 
         Stack stack = new Stack();
 
@@ -11,7 +11,7 @@ public class SplitIntoThousand {
         }
 
         while (num > 0) {
-            stack.push(num % 1000);
+            stack.push((int)(num % 1000));
             num = num / 1000;
         }
 
