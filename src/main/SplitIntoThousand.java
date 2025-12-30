@@ -5,6 +5,7 @@ public class SplitIntoThousand {
         Stack stack = new Stack(10);
 
         if (num == 0) {
+            
             stack.push(0);
             return stack;
         }
