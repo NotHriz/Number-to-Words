@@ -2,7 +2,7 @@ public class SplitIntoThousand {
 
     public static Stack splitIntoThousand(int num) {
 
-        Stack stack = new Stack(10);
+        Stack stack = new Stack();
 
         if (num == 0) {
             
