@@ -1,28 +1,25 @@
 public class Stack {
-
     private Node top;
-    public int size = 0;
-
+    public int size; 
     public Stack() {
-        top = null;
+        this.top = null;
+        this.size = 0;
     }
 
     public void push(int value) {
         Node newNode = new Node(value);
         newNode.next = top;
         top = newNode;
-        size++;
+        size++; 
     }
 
     public int pop() {
-
-        if (isEmpty()){
+        if (isEmpty()) {
             return -1;
         }
-        
         int value = top.data;
         top = top.next;
-        size--;
+        size--; 
         return value;
     }
 
