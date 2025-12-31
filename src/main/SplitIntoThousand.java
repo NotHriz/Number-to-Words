@@ -5,12 +5,12 @@ public class SplitIntoThousand {
         Stack stack = new Stack();
 
         if (num == 0) {
-            
             stack.push(0);
             return stack;
         }
 
         while (num > 0) {
+
             stack.push((int)(num % 1000));
             num = num / 1000;
         }
