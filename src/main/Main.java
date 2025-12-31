@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 public class Main extends Application {
 
@@ -19,14 +21,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-
         Label title = new Label("NUMBER TO WORDS CONVERTER");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         title.setTextFill(Color.web("#2c3e50"));
 
         Label subtitle = new Label("Securely convert large integers to legal word format");
         subtitle.setTextFill(Color.web("#95a5a6"));
-
 
         TextField inputField = new TextField();
         inputField.setPromptText("Enter a number (e.g. 9223372036854775807)");
@@ -38,6 +38,8 @@ public class Main extends Application {
         convertBtn.setPrefHeight(45);
         convertBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;");
 
+        convertBtn.setOnMouseEntered(e -> convertBtn.setStyle("-fx-background-color: #219150; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"));
+        convertBtn.setOnMouseExited(e -> convertBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"));
 
         TextArea resultDisplay = new TextArea();
         resultDisplay.setEditable(false);
@@ -46,22 +48,23 @@ public class Main extends Application {
         resultDisplay.setStyle("-fx-control-inner-background: #f8f9fa; -fx-font-family: 'Consolas'; -fx-border-color: #dcdde1; -fx-font-size: 14px;");
 
         Button copyBtn = new Button("Copy to Clipboard");
-        copyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #2980b9; -fx-border-color: #2980b9; -fx-border-radius: 5;");
+        copyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #2980b9; -fx-border-color: #2980b9; -fx-border-radius: 5; -fx-cursor: hand;");
 
+        copyBtn.setOnMouseEntered(e -> copyBtn.setStyle("-fx-background-color: #ebf5fb; -fx-text-fill: #2980b9; -fx-border-color: #2980b9; -fx-border-radius: 5; -fx-cursor: hand;"));
+        copyBtn.setOnMouseExited(e -> copyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #2980b9; -fx-border-color: #2980b9; -fx-border-radius: 5; -fx-cursor: hand;"));
 
         convertBtn.setOnAction(e -> {
             String rawText = inputField.getText().trim();
 
-
             if (!rawText.matches("-?\\d+")) {
-                resultDisplay.setText("ERROR: Invalid input. Please enter numbers only (no letters or special characters).");
-                resultDisplay.setStyle("-fx-text-fill: #e74c3c; -fx-control-inner-background: #f8f9fa;");
+                resultDisplay.setText("ERROR: Invalid input. Please enter numbers only.");
+                resultDisplay.setStyle("-fx-text-fill: #e74c3c; -fx-control-inner-background: #f8f9fa; -fx-font-family: 'Consolas';");
                 return;
             }
 
             try {
                 long number = Long.parseLong(rawText);
-                resultDisplay.setStyle("-fx-text-fill: black; -fx-control-inner-background: #f8f9fa;"); // Reset color
+                resultDisplay.setStyle("-fx-text-fill: black; -fx-control-inner-background: #f8f9fa; -fx-font-family: 'Consolas';");
 
                 if (number == 0) {
                     resultDisplay.setText("ZERO");
@@ -90,17 +93,30 @@ public class Main extends Application {
                 resultDisplay.setText(result.toString().trim());
 
             } catch (NumberFormatException ex) {
-                resultDisplay.setText("ERROR: The number entered is too large for the system to process.");
+                resultDisplay.setText("ERROR: The number is too large.");
             }
         });
 
         copyBtn.setOnAction(e -> {
-            final Clipboard clipboard = Clipboard.getSystemClipboard();
-            final ClipboardContent content = new ClipboardContent();
-            content.putString(resultDisplay.getText());
-            clipboard.setContent(content);
-        });
+            String textToCopy = resultDisplay.getText();
+            if (textToCopy != null && !textToCopy.trim().isEmpty() && !textToCopy.startsWith("ERROR")) {
+                final Clipboard clipboard = Clipboard.getSystemClipboard();
+                final ClipboardContent content = new ClipboardContent();
+                content.putString(textToCopy);
+                clipboard.setContent(content);
 
+                String originalText = copyBtn.getText();
+                copyBtn.setText("✔ Copied!");
+                copyBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-border-radius: 5;");
+
+                PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                pause.setOnFinished(event -> {
+                    copyBtn.setText(originalText);
+                    copyBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #2980b9; -fx-border-color: #2980b9; -fx-border-radius: 5;");
+                });
+                pause.play();
+            }
+        });
 
         VBox container = new VBox(15, title, subtitle, inputField, convertBtn, resultDisplay, copyBtn);
         container.setPadding(new Insets(40));
